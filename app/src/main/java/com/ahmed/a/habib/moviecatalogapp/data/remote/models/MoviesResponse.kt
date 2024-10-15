@@ -42,7 +42,7 @@ data class Movie(
 ) {
     fun toMovieDto(): MovieDto {
         return MovieDto(
-            id = id,
+            movieId = id,
             title = originalTitle,
             overview = overview,
             posterPath = posterPath,

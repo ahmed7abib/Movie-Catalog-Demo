@@ -31,7 +31,7 @@ class MoviesRVAdapter : BaseRVAdapter<MovieDto, ItemListMoviesBinding>(DiffCallb
 
     class DiffCallback : DiffUtil.ItemCallback<MovieDto>() {
         override fun areItemsTheSame(oldItem: MovieDto, newItem: MovieDto): Boolean {
-            return oldItem.id == newItem.id
+            return oldItem.movieId == newItem.movieId
         }
 
         override fun areContentsTheSame(oldItem: MovieDto, newItem: MovieDto): Boolean {

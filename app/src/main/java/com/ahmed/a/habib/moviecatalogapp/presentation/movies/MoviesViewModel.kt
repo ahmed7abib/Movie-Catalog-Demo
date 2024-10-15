@@ -40,18 +40,28 @@ class MoviesViewModel @Inject constructor(private val moviesRepo: MoviesRepo) : 
                 when (it) {
                     MoviesIntents.GetMovies -> getMovies()
                     MoviesIntents.GetOnlineMovies -> getOnlineMovies()
+                    MoviesIntents.RefreshMovies -> refreshMovies()
                 }
             }
         }
     }
 
+    private fun refreshMovies() = viewModelScope.launch {
+        _pageNumber = 1
+        _isLastPage = false
+        moviesRepo.deleteAllMovies()
+        getOnlineMovies()
+    }
+
     private suspend fun getMovies() {
-        moviesRepo.getOfflineMovies().collect { offlineMovies ->
-            if (offlineMovies.isEmpty()) {
-                getOnlineMovies()
-            } else {
-                _result.postValue(MoviesViewStates.MoviesList(offlineMovies))
-            }
+        val currentPage = moviesRepo.getCurrentPage()
+
+        if (currentPage != null) {
+            _pageNumber = currentPage.page
+            val movieList = currentPage.moviesList
+            _result.postValue(MoviesViewStates.MoviesList(movieList))
+        } else {
+            getOnlineMovies()
         }
     }
 

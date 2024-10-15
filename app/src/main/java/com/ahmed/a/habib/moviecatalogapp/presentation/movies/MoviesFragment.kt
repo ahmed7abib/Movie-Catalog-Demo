@@ -59,7 +59,7 @@ class MoviesFragment : BaseFragment<FragmentMoviesBinding>(FragmentMoviesBinding
 
     private fun setupSwipeRefresh() {
         binding.swipeRefreshLayout.setOnRefreshListener {
-            viewModel.sendIntend(MoviesIntents.GetOnlineMovies)
+            viewModel.sendIntend(MoviesIntents.RefreshMovies)
             binding.swipeRefreshLayout.isRefreshing = false
         }
     }
