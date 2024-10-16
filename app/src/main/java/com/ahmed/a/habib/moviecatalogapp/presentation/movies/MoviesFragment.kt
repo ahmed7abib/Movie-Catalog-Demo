@@ -52,8 +52,8 @@ class MoviesFragment : BaseFragment<FragmentMoviesBinding>(FragmentMoviesBinding
 
         adapter.listener = { _, item, _ ->
             val bundle = Bundle()
-            //  bundle.putSerializable(Keys.MOVIE, item)
-            navigateTo(R.id.action_moviesFragment_to_movieDetailsFragment)
+            bundle.putSerializable(Keys.MOVIE, item)
+            navigateToWithBundle(R.id.action_moviesFragment_to_movieDetailsFragment, bundle)
         }
     }
 

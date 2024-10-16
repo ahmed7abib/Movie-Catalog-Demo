@@ -8,6 +8,7 @@ import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.filters.MediumTest
+import com.ahmed.a.habib.moviecatalogapp.MainCoroutineRule
 import com.ahmed.a.habib.moviecatalogapp.MoviesFragmentFactory
 import com.ahmed.a.habib.moviecatalogapp.R
 import com.ahmed.a.habib.moviecatalogapp.databinding.ItemListMoviesBinding
@@ -35,6 +36,9 @@ class MoviesFragmentTest {
 
     @get:Rule
     var instantTaskExecutorRule = InstantTaskExecutorRule()
+
+    @get:Rule
+    var mainCoroutineRule = MainCoroutineRule()
 
     @Inject
     lateinit var fragmentFactory: MoviesFragmentFactory
