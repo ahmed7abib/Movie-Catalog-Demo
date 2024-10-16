@@ -1,5 +1,6 @@
 package com.ahmed.a.habib.moviecatalogapp.view
 
+import android.os.Bundle
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
@@ -16,6 +17,7 @@ import com.ahmed.a.habib.moviecatalogapp.domain.dto.MovieDto
 import com.ahmed.a.habib.moviecatalogapp.launchFragmentInHiltContainer
 import com.ahmed.a.habib.moviecatalogapp.presentation.movies.MoviesFragment
 import com.ahmed.a.habib.moviecatalogapp.utils.BaseRVAdapter
+import com.ahmed.a.habib.moviecatalogapp.utils.Keys
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -23,6 +25,7 @@ import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import org.mockito.ArgumentCaptor
 import org.mockito.Mockito
 import javax.inject.Inject
 
@@ -52,6 +55,7 @@ class MoviesFragmentTest {
     fun testRecyclerViewItemClick() = runTest {
         // Arrange
         val navController = Mockito.mock(NavController::class.java)
+        val argumentCaptor = ArgumentCaptor.forClass(Bundle::class.java)
 
         val fakeMovies = listOf(
             MovieDto(
@@ -80,7 +84,10 @@ class MoviesFragmentTest {
                 )
             )
 
-        Mockito.verify(navController)
-            .navigate(R.id.action_moviesFragment_to_movieDetailsFragment)
+        // Assert
+        Mockito.verify(navController).navigate(
+            Mockito.eq(R.id.action_moviesFragment_to_movieDetailsFragment),
+            argumentCaptor.capture()
+        )
     }
 }
