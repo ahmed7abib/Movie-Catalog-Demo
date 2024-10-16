@@ -16,7 +16,7 @@ import dagger.hilt.android.AndroidEntryPoint
 class MoviesFragment : BaseFragment<FragmentMoviesBinding>(FragmentMoviesBinding::inflate) {
 
     override val viewModel: MoviesViewModel by viewModels()
-    private val adapter: MoviesRVAdapter by lazy { MoviesRVAdapter() }
+    val adapter: MoviesRVAdapter by lazy { MoviesRVAdapter() }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -52,8 +52,8 @@ class MoviesFragment : BaseFragment<FragmentMoviesBinding>(FragmentMoviesBinding
 
         adapter.listener = { _, item, _ ->
             val bundle = Bundle()
-            bundle.putSerializable(Keys.MOVIE, item)
-            navigateToWithBundle(R.id.action_moviesFragment_to_movieDetailsFragment, bundle)
+            //  bundle.putSerializable(Keys.MOVIE, item)
+            navigateTo(R.id.action_moviesFragment_to_movieDetailsFragment)
         }
     }
 

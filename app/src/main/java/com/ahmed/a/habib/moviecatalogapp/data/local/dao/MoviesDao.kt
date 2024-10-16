@@ -18,5 +18,5 @@ interface MoviesDao {
     suspend fun getCurrentPage(): CurrentPageEntity?
 
     @Query("DELETE FROM pages")
-    suspend fun deleteAllMovies()
+    suspend fun deleteAllPages()
 }

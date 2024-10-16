@@ -67,6 +67,6 @@ class MoviesRepoImpl(private val moviesApi: MoviesApi, private val moviesDao: Mo
     }
 
     override suspend fun deleteAllMovies() {
-        moviesDao.deleteAllMovies()
+        moviesDao.deleteAllPages()
     }
 }

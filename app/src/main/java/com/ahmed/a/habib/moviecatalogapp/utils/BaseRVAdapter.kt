@@ -18,6 +18,6 @@ abstract class BaseRVAdapter<T : Any, VB : ViewBinding>(callback: DiffUtil.ItemC
         getLayoutInflater(parent)
     )
 
-    class BaseViewHolder<VB : ViewBinding>(val binding: VB) :
+    open class BaseViewHolder<VB : ViewBinding>(val binding: VB) :
         RecyclerView.ViewHolder(binding.root)
 }

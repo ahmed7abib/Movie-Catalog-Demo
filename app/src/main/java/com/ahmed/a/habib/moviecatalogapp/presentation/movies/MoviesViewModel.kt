@@ -53,8 +53,8 @@ class MoviesViewModel @Inject constructor(private val moviesRepo: MoviesRepo) : 
         getOnlineMovies()
     }
 
-    private suspend fun getMovies() {
-        val currentPage = moviesRepo.getCurrentPage()
+    suspend fun getMovies() {
+        val currentPage = getCurrentPage()
 
         if (currentPage != null) {
             _pageNumber = currentPage.page
@@ -65,7 +65,9 @@ class MoviesViewModel @Inject constructor(private val moviesRepo: MoviesRepo) : 
         }
     }
 
-    private fun getOnlineMovies() = viewModelScope.launch {
+    suspend fun getCurrentPage() = moviesRepo.getCurrentPage()
+
+    suspend fun getOnlineMovies() {
         moviesRepo.getOnlineMovies(_pageNumber++).onStart {
             _isPaginationLoad = true
             handleLoading(true)

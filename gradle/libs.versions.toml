@@ -14,7 +14,7 @@ okhttp_logging_interceptor = "4.9.3"
 hilt = "2.48"
 room = "2.6.1"
 coroutines = "1.7.3"
-ksp = "1.9.0-1.0.13"
+ksp = "1.9.10-1.0.13"
 appcompat = "1.7.0"
 material = "1.12.0"
 activity = "1.9.2"
@@ -22,14 +22,36 @@ constraintlayout = "2.1.4"
 navigation = "2.8.2"
 glide = "4.15.1"
 swipeRefresh = "1.1.0"
+truth = "1.4.4"
+turbin = "0.12.1"
+mockito_core = "4.7.0"
+mockito_kotlin = "4.0.0"
+coroutines_tets = "1.7.1"
+core_testing = "2.2.0"
+hilt_android_testing = "2.43.2"
+fragment_test = "1.8.4"
+espresso_contrib = "3.6.1"
+mockito_android = "4.7.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
-junit = { group = "junit", name = "junit", version.ref = "junit" }
-androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
-androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
 androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtx" }
 multidex = { group = "androidx.multidex", name = "multidex", version.ref = "multidex" }
+
+# Testing
+junit = { group = "junit", name = "junit", version.ref = "junit" }
+truth = { group = "com.google.truth", name = "truth", version.ref = "truth" }
+turbine = { group = "app.cash.turbine", name = "turbine", version.ref = "turbin" }
+mockito-core = { group = "org.mockito", name = "mockito-core", version.ref = "mockito_core" }
+mockito-android = { group = "org.mockito", name = "mockito-android", version.ref = "mockito_android" }
+mockito-kotlin = { group = "org.mockito.kotlin", name = "mockito-kotlin", version.ref = "mockito_kotlin" }
+androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
+androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
+espresso-contrib = { group = "androidx.test.espresso", name = "espresso-contrib", version.ref = "espresso_contrib" }
+kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "coroutines_tets" }
+core-testing = { group = "androidx.arch.core", name = "core-testing", version.ref = "core_testing" }
+hilt-android-testing = { group = "com.google.dagger", name = "hilt-android-testing", version.ref = "hilt_android_testing" }
+fragment-testing = { group = "androidx.fragment", name = "fragment-testing", version.ref = "fragment_test" }
 
 # Retrofit
 retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }

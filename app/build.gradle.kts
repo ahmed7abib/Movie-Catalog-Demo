@@ -18,7 +18,7 @@ android {
         versionName = "1.0"
 
         multiDexEnabled = true
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner = "com.ahmed.a.habib.moviecatalogapp.HiltTestRunner"
 
         vectorDrawables {
             useSupportLibrary = true
@@ -34,14 +34,22 @@ android {
             buildConfigField("String", "BASE_URL", "\"https://api.themoviedb.org/3/\"")
             buildConfigField("String", "API_KEY", "\"737fa690e0b082a189535d1b1df6614f\"")
             buildConfigField("String", "IMAGES_BASE_URL", "\"https://image.tmdb.org/t/p/w500\"")
-            buildConfigField("String", "BEAR_TOKEN", "\"eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI3MzdmYTY5MGUwYjA4MmExODk1MzVkMWIxZGY2NjE0ZiIsIm5iZiI6MTcyODY3MzU3MC4wNTA0OTcsInN1YiI6IjVmNWI2NjUzNzMxNGExMDAzNmUwMTU3OSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.YMbMIxs9mLq5QuOFrJHGsGuHX-CAU7LQ5U6gulNep-4\"")
+            buildConfigField(
+                "String",
+                "BEAR_TOKEN",
+                "\"eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI3MzdmYTY5MGUwYjA4MmExODk1MzVkMWIxZGY2NjE0ZiIsIm5iZiI6MTcyODY3MzU3MC4wNTA0OTcsInN1YiI6IjVmNWI2NjUzNzMxNGExMDAzNmUwMTU3OSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.YMbMIxs9mLq5QuOFrJHGsGuHX-CAU7LQ5U6gulNep-4\""
+            )
         }
 
         release {
             buildConfigField("String", "BASE_URL", "\"https://api.themoviedb.org/3/\"")
             buildConfigField("String", "API_KEY", "\"737fa690e0b082a189535d1b1df6614f\"")
             buildConfigField("String", "IMAGES_BASE_URL", "\"https://image.tmdb.org/t/p/w500\"")
-            buildConfigField("String", "BEAR_TOKEN", "\"eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI3MzdmYTY5MGUwYjA4MmExODk1MzVkMWIxZGY2NjE0ZiIsIm5iZiI6MTcyODY3MzU3MC4wNTA0OTcsInN1YiI6IjVmNWI2NjUzNzMxNGExMDAzNmUwMTU3OSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.YMbMIxs9mLq5QuOFrJHGsGuHX-CAU7LQ5U6gulNep-4\"")
+            buildConfigField(
+                "String",
+                "BEAR_TOKEN",
+                "\"eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI3MzdmYTY5MGUwYjA4MmExODk1MzVkMWIxZGY2NjE0ZiIsIm5iZiI6MTcyODY3MzU3MC4wNTA0OTcsInN1YiI6IjVmNWI2NjUzNzMxNGExMDAzNmUwMTU3OSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.YMbMIxs9mLq5QuOFrJHGsGuHX-CAU7LQ5U6gulNep-4\""
+            )
 
             isMinifyEnabled = false
             proguardFiles(
@@ -75,9 +83,27 @@ dependencies {
     implementation(libs.material)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
+
+    // Testing
     testImplementation(libs.junit)
+    testImplementation(libs.truth)
+    testImplementation(libs.turbine) // For test flow.
+    testImplementation(libs.mockito.core)
+    testImplementation(libs.core.testing)
+    testImplementation(libs.mockito.kotlin)
+    testImplementation(libs.kotlinx.coroutines.test)
+
+    // Android Testing
+    androidTestImplementation(libs.truth)
+    androidTestImplementation(libs.core.testing)
+    androidTestImplementation(libs.mockito.android)
+    androidTestImplementation(libs.hilt.android.testing)
+    kaptAndroidTest(libs.hilt.compiler)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+    androidTestImplementation(libs.espresso.contrib)
+    androidTestImplementation(libs.kotlinx.coroutines.test)
+    androidTestImplementation(libs.fragment.testing)
 
     // Retrofit
     implementation(libs.retrofit)
