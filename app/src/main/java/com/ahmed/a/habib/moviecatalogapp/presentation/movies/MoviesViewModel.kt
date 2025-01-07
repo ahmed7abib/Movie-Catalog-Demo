@@ -1,11 +1,15 @@
 package com.ahmed.a.habib.moviecatalogapp.presentation.movies
 
 import androidx.lifecycle.viewModelScope
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
+import com.ahmed.a.habib.moviecatalogapp.data.remote.models.Movie
 import com.ahmed.a.habib.moviecatalogapp.domain.repos.MoviesRepo
 import com.ahmed.a.habib.moviecatalogapp.utils.SingleMutableLiveData
 import com.ahmed.a.habib.moviecatalogapp.utils.network.Resource
 import com.ahmed.a.habib.moviecatalogapp.utils.ui.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.launchIn
@@ -29,6 +33,8 @@ class MoviesViewModel @Inject constructor(private val moviesRepo: MoviesRepo) : 
 
     private val _result: SingleMutableLiveData<MoviesViewStates> = SingleMutableLiveData()
     val result: SingleMutableLiveData<MoviesViewStates> get() = _result
+
+    val moviesFlow = moviesRepo.getOnlineMovies().cachedIn(viewModelScope)
 
     fun sendIntend(intent: MoviesIntents) = viewModelScope.launch {
         sendIntend.emit(intent)

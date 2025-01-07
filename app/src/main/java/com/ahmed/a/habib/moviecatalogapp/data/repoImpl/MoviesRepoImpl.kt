@@ -1,22 +1,39 @@
 package com.ahmed.a.habib.moviecatalogapp.data.repoImpl
 
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
 import com.ahmed.a.habib.moviecatalogapp.data.local.dao.MoviesDao
 import com.ahmed.a.habib.moviecatalogapp.data.local.entities.CurrentPageEntity
 import com.ahmed.a.habib.moviecatalogapp.data.local.entities.MovieEntity
-import com.ahmed.a.habib.moviecatalogapp.data.remote.api.EndPoints.API_KEY
+import com.ahmed.a.habib.moviecatalogapp.data.remote.api.MoviePagingSource
 import com.ahmed.a.habib.moviecatalogapp.data.remote.api.MoviesApi
 import com.ahmed.a.habib.moviecatalogapp.domain.dto.CurrentPageDto
 import com.ahmed.a.habib.moviecatalogapp.domain.dto.MovieDto
 import com.ahmed.a.habib.moviecatalogapp.domain.repos.MoviesRepo
 import com.ahmed.a.habib.moviecatalogapp.utils.network.BaseRemoteDataSource
 import com.ahmed.a.habib.moviecatalogapp.utils.network.Resource
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
-class MoviesRepoImpl(private val moviesApi: MoviesApi, private val moviesDao: MoviesDao) :
-    MoviesRepo, BaseRemoteDataSource() {
+class MoviesRepoImpl(
+    private val moviesApi: MoviesApi,
+    private val moviesDao: MoviesDao,
+    private val moviesPagingSource: MoviePagingSource,
+) : MoviesRepo, BaseRemoteDataSource() {
+
+    override fun getOnlineMovies(): Flow<PagingData<MovieDto>> {
+        return Pager(
+            config = PagingConfig(
+                pageSize = 20,
+                enablePlaceholders = false
+            ),
+            pagingSourceFactory = { moviesPagingSource }
+        ).flow
+    }
 
     override suspend fun getOnlineMovies(page: Int) = safeApiCall {
-        moviesApi.getMovies(API_KEY, page)
+        moviesApi.getMovies(page = page)
     }.map {
         when (it) {
             is Resource.Success -> {

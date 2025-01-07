@@ -1,5 +1,6 @@
 package com.ahmed.a.habib.moviecatalogapp.data.remote.api
 
+import com.ahmed.a.habib.moviecatalogapp.data.remote.api.EndPoints.API_KEY
 import com.ahmed.a.habib.moviecatalogapp.data.remote.api.EndPoints.MOVIES
 import com.ahmed.a.habib.moviecatalogapp.data.remote.models.MoviesResponse
 import retrofit2.Response
@@ -11,7 +12,7 @@ interface MoviesApi {
 
     @GET(MOVIES)
     suspend fun getMovies(
-        @Query("api_key") apiKey: String,
-        @Query("page") page: Int
+        @Query("api_key") apiKey: String = API_KEY,
+        @Query("page") page: Int,
     ): Response<MoviesResponse>
 }

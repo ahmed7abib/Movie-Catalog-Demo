@@ -32,6 +32,7 @@ hilt_android_testing = "2.43.2"
 fragment_test = "1.8.5"
 espresso_contrib = "3.6.1"
 mockito_android = "4.7.0"
+paging = "3.3.5"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -87,6 +88,9 @@ glide-compiler = { group = "com.github.bumptech.glide", name = "compiler", versi
 
 # Swip Refrsh
 swiperefreshlayout = { group = "androidx.swiperefreshlayout", name = "swiperefreshlayout", version.ref = "swipeRefresh" }
+
+# Paging 3
+paging-runtime = { group = "androidx.paging", name = "paging-runtime", version.ref = "paging" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

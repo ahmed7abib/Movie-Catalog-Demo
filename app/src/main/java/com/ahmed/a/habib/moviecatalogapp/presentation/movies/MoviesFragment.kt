@@ -1,8 +1,11 @@
 package com.ahmed.a.habib.moviecatalogapp.presentation.movies
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
+import androidx.paging.map
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ahmed.a.habib.moviecatalogapp.R
 import com.ahmed.a.habib.moviecatalogapp.databinding.FragmentMoviesBinding
@@ -11,6 +14,8 @@ import com.ahmed.a.habib.moviecatalogapp.utils.Keys
 import com.ahmed.a.habib.moviecatalogapp.utils.PaginationListenerKtx
 import com.ahmed.a.habib.moviecatalogapp.utils.ui.BaseFragment
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MoviesFragment : BaseFragment<FragmentMoviesBinding>(FragmentMoviesBinding::inflate) {
@@ -28,7 +33,13 @@ class MoviesFragment : BaseFragment<FragmentMoviesBinding>(FragmentMoviesBinding
     }
 
     private fun init() {
-        viewModel.sendIntend(MoviesIntents.GetMovies)
+        // viewModel.sendIntend(MoviesIntents.GetMovies)
+
+        lifecycleScope.launch {
+            viewModel.moviesFlow.collectLatest { pagingData ->
+                adapter.submitData(pagingData)
+            }
+        }
     }
 
     private fun setupRV() {
@@ -77,7 +88,7 @@ class MoviesFragment : BaseFragment<FragmentMoviesBinding>(FragmentMoviesBinding
             showEmptyView()
         } else {
             hideEmptyView()
-            adapter.submitList(movies)
+//            adapter.submitData(movies)
         }
     }
 

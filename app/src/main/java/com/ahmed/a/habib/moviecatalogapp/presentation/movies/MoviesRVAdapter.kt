@@ -19,13 +19,13 @@ class MoviesRVAdapter : BaseRVAdapter<MovieDto, ItemListMoviesBinding>(DiffCallb
         val currentItem = getItem(position)
 
         holder.binding.apply {
-            titleTV.text = currentItem.title
-            ratingTV.text = currentItem.voteAverage.toString()
-            posterIV.loadImage(currentItem.posterPath.orEmpty())
+            titleTV.text = currentItem?.title
+            ratingTV.text = currentItem?.voteAverage.toString()
+            posterIV.loadImage(currentItem?.posterPath.orEmpty())
         }
 
         holder.itemView.setOnClickListener {
-            listener?.invoke(it, currentItem, position)
+            listener?.invoke(it, currentItem!!, position)
         }
     }
 

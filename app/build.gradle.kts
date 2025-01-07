@@ -131,6 +131,9 @@ dependencies {
     implementation(libs.glide)
     ksp(libs.glide.compiler)
 
+    // Paging 3
+    implementation(libs.paging.runtime)
+
     // Swipe Refresh
     implementation(libs.swiperefreshlayout)
 }
