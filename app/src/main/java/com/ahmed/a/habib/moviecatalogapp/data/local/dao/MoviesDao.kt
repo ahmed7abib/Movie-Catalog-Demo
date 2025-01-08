@@ -4,18 +4,16 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import androidx.room.Transaction
-import com.ahmed.a.habib.moviecatalogapp.data.local.entities.CurrentPageEntity
+import com.ahmed.a.habib.moviecatalogapp.data.local.entities.PageEntity
 
 @Dao
 interface MoviesDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun saveCurrentPage(currentPageEntity: CurrentPageEntity)
+    suspend fun saveCurrentPage(pageEntity: PageEntity)
 
-    @Transaction
-    @Query("SELECT * FROM pages")
-    suspend fun getCurrentPage(): CurrentPageEntity?
+    @Query("SELECT * FROM pages WHERE pageNumber = :page")
+    suspend fun getPage(page: Int): PageEntity?
 
     @Query("DELETE FROM pages")
     suspend fun deleteAllPages()

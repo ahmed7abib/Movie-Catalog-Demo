@@ -1,40 +1,24 @@
 package com.ahmed.a.habib.moviecatalogapp.presentation.movies
 
+
 import androidx.lifecycle.viewModelScope
-import androidx.paging.PagingData
-import androidx.paging.cachedIn
-import com.ahmed.a.habib.moviecatalogapp.data.remote.models.Movie
 import com.ahmed.a.habib.moviecatalogapp.domain.repos.MoviesRepo
 import com.ahmed.a.habib.moviecatalogapp.utils.SingleMutableLiveData
-import com.ahmed.a.habib.moviecatalogapp.utils.network.Resource
 import com.ahmed.a.habib.moviecatalogapp.utils.ui.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+
 @HiltViewModel
 class MoviesViewModel @Inject constructor(private val moviesRepo: MoviesRepo) : BaseViewModel() {
-
-    private var _pageNumber = 1
-
-    private var _isPaginationLoad = false
-    val isPaginationLoad: Boolean get() = _isPaginationLoad
-
-    private var _isLastPage = false
-    val isLastPage: Boolean get() = _isLastPage
 
     private val sendIntend: MutableSharedFlow<MoviesIntents> = MutableSharedFlow()
 
     private val _result: SingleMutableLiveData<MoviesViewStates> = SingleMutableLiveData()
     val result: SingleMutableLiveData<MoviesViewStates> get() = _result
-
-    val moviesFlow = moviesRepo.getOnlineMovies().cachedIn(viewModelScope)
 
     fun sendIntend(intent: MoviesIntents) = viewModelScope.launch {
         sendIntend.emit(intent)
@@ -45,57 +29,43 @@ class MoviesViewModel @Inject constructor(private val moviesRepo: MoviesRepo) : 
             sendIntend.collectLatest {
                 when (it) {
                     MoviesIntents.GetMovies -> getMovies()
-                    MoviesIntents.GetOnlineMovies -> getOnlineMovies()
                     MoviesIntents.RefreshMovies -> refreshMovies()
                 }
             }
         }
     }
 
-    private fun refreshMovies() = viewModelScope.launch {
-        _pageNumber = 1
-        _isLastPage = false
-        moviesRepo.deleteAllMovies()
-        getOnlineMovies()
+    private suspend fun getOnlineMovies() {
+        moviesRepo.getOnlineMovies(
+            errors = { error -> handleError(error) },
+            loading = { isLoading -> handleLoading(isLoading) }
+        ).collect {
+            _result.postValue(MoviesViewStates.MoviesList(it))
+        }
+    }
+
+    private suspend fun getOfflineMovies() {
+        moviesRepo.getOfflineMovies { error ->
+            handleError(error)
+        }.collect {
+            _result.postValue(MoviesViewStates.MoviesList(it))
+        }
     }
 
     suspend fun getMovies() {
-        val currentPage = getCurrentPage()
-
-        if (currentPage != null) {
-            _pageNumber = currentPage.page
-            val movieList = currentPage.moviesList
-            _result.postValue(MoviesViewStates.MoviesList(movieList))
+        if (offlineMoviesIsNotEmpty()) {
+            getOfflineMovies()
         } else {
             getOnlineMovies()
         }
     }
 
-    suspend fun getCurrentPage() = moviesRepo.getCurrentPage()
+    private fun offlineMoviesIsNotEmpty(): Boolean {
+        return true
+    }
 
-    suspend fun getOnlineMovies() {
-        moviesRepo.getOnlineMovies(_pageNumber++).onStart {
-            _isPaginationLoad = true
-            handleLoading(true)
-        }.map {
-            when (it) {
-                is Resource.Error -> {
-                    _isPaginationLoad = false
-                    handleError(it.errorTypes)
-                }
-
-                is Resource.Success -> {
-                    _isPaginationLoad = false
-                    handleLoading(false)
-
-                    if (it.data.orEmpty().isEmpty()) {
-                        _isLastPage = true
-                        _pageNumber = 1
-                    }
-
-                    _result.postValue(MoviesViewStates.MoviesList(it.data.orEmpty()))
-                }
-            }
-        }.launchIn(viewModelScope)
+    private fun refreshMovies() = viewModelScope.launch {
+        moviesRepo.deleteAllMovies()
+        getOnlineMovies()
     }
 }

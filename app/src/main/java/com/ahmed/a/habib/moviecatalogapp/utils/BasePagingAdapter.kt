@@ -4,12 +4,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
 
-abstract class BaseRVAdapter<T : Any, VB : ViewBinding>(callback: DiffUtil.ItemCallback<T>) :
-    PagingDataAdapter<T, BaseRVAdapter.BaseViewHolder<VB>>(callback) {
+abstract class BasePagingAdapter<T : Any, VB : ViewBinding>(callback: DiffUtil.ItemCallback<T>) :
+    PagingDataAdapter<T, BasePagingAdapter.BaseViewHolder<VB>>(callback) {
 
     abstract fun getLayoutInflater(parent: ViewGroup): VB
 

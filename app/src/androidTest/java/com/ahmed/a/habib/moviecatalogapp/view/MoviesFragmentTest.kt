@@ -16,7 +16,6 @@ import com.ahmed.a.habib.moviecatalogapp.databinding.ItemListMoviesBinding
 import com.ahmed.a.habib.moviecatalogapp.domain.dto.MovieDto
 import com.ahmed.a.habib.moviecatalogapp.launchFragmentInHiltContainer
 import com.ahmed.a.habib.moviecatalogapp.presentation.movies.MoviesFragment
-import com.ahmed.a.habib.moviecatalogapp.utils.BaseRVAdapter
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.ExperimentalCoroutinesApi

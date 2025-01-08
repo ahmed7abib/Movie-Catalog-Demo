@@ -4,7 +4,7 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.test.filters.SmallTest
 import com.ahmed.a.habib.moviecatalogapp.data.local.MoviesRoomDB
 import com.ahmed.a.habib.moviecatalogapp.data.local.dao.MoviesDao
-import com.ahmed.a.habib.moviecatalogapp.data.local.entities.CurrentPageEntity
+import com.ahmed.a.habib.moviecatalogapp.data.local.entities.PageEntity
 import com.ahmed.a.habib.moviecatalogapp.data.local.entities.MovieEntity
 import com.google.common.truth.Truth.assertThat
 import dagger.hilt.android.testing.HiltAndroidRule
@@ -49,29 +49,29 @@ class MoviesDaoTest {
     @Test
     fun testSaveCurrentPage() = runTest {
         // Arrange
-        val currentPageEntity =
-            CurrentPageEntity(1, 1, listOf(MovieEntity(1, "", "", "", 122, 1.5, "", 1)))
+        val pageEntity =
+            PageEntity(1, 1, listOf(MovieEntity(1, "", "", "", 122, 1.5, "", 1)))
 
         // Act
-        dao.saveCurrentPage(currentPageEntity)
-        val currentPage = dao.getCurrentPage()
+        dao.saveCurrentPage(pageEntity)
+        val currentPage = dao.getPage()
 
         // Assert
-        assertThat(currentPage).isEqualTo(currentPageEntity)
+        assertThat(currentPage).isEqualTo(pageEntity)
     }
 
     @Test
     fun testDeleteAllPages() = runTest {
         // Arrange
-        val currentPageEntity =
-            CurrentPageEntity(1, 1, listOf(MovieEntity(1, "", "", "", 122, 1.5, "", 1)))
+        val pageEntity =
+            PageEntity(1, 1, listOf(MovieEntity(1, "", "", "", 122, 1.5, "", 1)))
 
         // Act
-        dao.saveCurrentPage(currentPageEntity)
+        dao.saveCurrentPage(pageEntity)
         dao.deleteAllPages()
-        val currentPage = dao.getCurrentPage()
+        val currentPage = dao.getPage()
 
         // Assert
-        assertThat(currentPage).isNotEqualTo(currentPageEntity)
+        assertThat(currentPage).isNotEqualTo(pageEntity)
     }
 }

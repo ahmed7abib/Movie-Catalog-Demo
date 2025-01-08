@@ -6,17 +6,17 @@ import androidx.room.PrimaryKey
 import com.ahmed.a.habib.moviecatalogapp.domain.dto.CurrentPageDto
 
 @Entity(tableName = "pages")
-data class CurrentPageEntity(
+data class PageEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Int? = null,
-    @ColumnInfo(name = "page")
-    val page: Int,
+    @ColumnInfo(name = "pageNumber")
+    val pageNumber: Int,
     @ColumnInfo(name = "moviesList")
     val moviesList: List<MovieEntity>
 ) {
     fun toDto(): CurrentPageDto {
         return CurrentPageDto(
-            page = page,
+            page = pageNumber,
             moviesList = moviesList.map { it.toMovieDto() }
         )
     }

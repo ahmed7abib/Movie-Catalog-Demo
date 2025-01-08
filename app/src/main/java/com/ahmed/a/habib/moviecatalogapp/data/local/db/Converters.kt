@@ -1,9 +1,8 @@
-package com.ahmed.a.habib.moviecatalogapp.data.local
+package com.ahmed.a.habib.moviecatalogapp.data.local.db
 
 import androidx.room.TypeConverter
 import com.ahmed.a.habib.moviecatalogapp.data.local.entities.MovieEntity
 import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 
 class Converters {
 
@@ -16,7 +15,7 @@ class Converters {
 
     @TypeConverter
     fun fromJsonToMovieList(json: String): List<MovieEntity> {
-        val type = object : TypeToken<List<MovieEntity>>() {}.type
+        val type = object : com.google.gson.reflect.TypeToken<List<MovieEntity>>() {}.type
         return gson.fromJson(json, type)
     }
 }

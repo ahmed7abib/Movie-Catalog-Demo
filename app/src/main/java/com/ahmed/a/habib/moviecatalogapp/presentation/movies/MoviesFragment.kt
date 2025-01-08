@@ -1,27 +1,24 @@
 package com.ahmed.a.habib.moviecatalogapp.presentation.movies
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.paging.map
+import androidx.paging.PagingData
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ahmed.a.habib.moviecatalogapp.R
 import com.ahmed.a.habib.moviecatalogapp.databinding.FragmentMoviesBinding
 import com.ahmed.a.habib.moviecatalogapp.domain.dto.MovieDto
 import com.ahmed.a.habib.moviecatalogapp.utils.Keys
-import com.ahmed.a.habib.moviecatalogapp.utils.PaginationListenerKtx
 import com.ahmed.a.habib.moviecatalogapp.utils.ui.BaseFragment
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MoviesFragment : BaseFragment<FragmentMoviesBinding>(FragmentMoviesBinding::inflate) {
 
     override val viewModel: MoviesViewModel by viewModels()
-    val adapter: MoviesRVAdapter by lazy { MoviesRVAdapter() }
+    val adapter: MoviesPagingAdapter by lazy { MoviesPagingAdapter() }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -33,33 +30,13 @@ class MoviesFragment : BaseFragment<FragmentMoviesBinding>(FragmentMoviesBinding
     }
 
     private fun init() {
-        // viewModel.sendIntend(MoviesIntents.GetMovies)
-
-        lifecycleScope.launch {
-            viewModel.moviesFlow.collectLatest { pagingData ->
-                adapter.submitData(pagingData)
-            }
-        }
+        viewModel.sendIntend(MoviesIntents.GetMovies)
     }
 
     private fun setupRV() {
         val layoutManager = LinearLayoutManager(requireContext())
         binding.moviesRV.layoutManager = layoutManager
         binding.moviesRV.adapter = adapter
-
-        binding.moviesRV.addOnScrollListener(object : PaginationListenerKtx(layoutManager, 10) {
-            override fun loadMoreItems() {
-                viewModel.sendIntend(MoviesIntents.GetOnlineMovies)
-            }
-
-            override fun isLastPage(): Boolean {
-                return viewModel.isLastPage
-            }
-
-            override fun isLoading(): Boolean {
-                return viewModel.isPaginationLoad
-            }
-        })
 
         adapter.listener = { _, item, _ ->
             val bundle = Bundle()
@@ -83,12 +60,12 @@ class MoviesFragment : BaseFragment<FragmentMoviesBinding>(FragmentMoviesBinding
         }
     }
 
-    private fun handleMoviesList(movies: List<MovieDto>) {
-        if (movies.isEmpty()) {
+    private fun handleMoviesList(movies: PagingData<MovieDto>?) {
+        if (movies == null) {
             showEmptyView()
         } else {
             hideEmptyView()
-//            adapter.submitData(movies)
+            lifecycleScope.launch { adapter.submitData(movies) }
         }
     }
 

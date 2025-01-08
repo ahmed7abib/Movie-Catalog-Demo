@@ -5,11 +5,11 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import com.ahmed.a.habib.moviecatalogapp.databinding.ItemListMoviesBinding
 import com.ahmed.a.habib.moviecatalogapp.domain.dto.MovieDto
-import com.ahmed.a.habib.moviecatalogapp.utils.BaseRVAdapter
+import com.ahmed.a.habib.moviecatalogapp.utils.BasePagingAdapter
 import com.ahmed.a.habib.moviecatalogapp.utils.loadImage
 
 
-class MoviesRVAdapter : BaseRVAdapter<MovieDto, ItemListMoviesBinding>(DiffCallback()) {
+class MoviesPagingAdapter : BasePagingAdapter<MovieDto, ItemListMoviesBinding>(DiffCallback()) {
 
     override fun getLayoutInflater(parent: ViewGroup): ItemListMoviesBinding {
         return ItemListMoviesBinding.inflate(LayoutInflater.from(parent.context), parent, false)
