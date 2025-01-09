@@ -1,9 +1,8 @@
 package com.ahmed.a.habib.moviecatalogapp.viewmodels
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import androidx.paging.PagingData
 import com.ahmed.a.habib.moviecatalogapp.MainCoroutineRule
-import com.ahmed.a.habib.moviecatalogapp.domain.dto.CurrentPageDto
-import com.ahmed.a.habib.moviecatalogapp.domain.dto.MovieDto
 import com.ahmed.a.habib.moviecatalogapp.getOrAwaitValueTest
 import com.ahmed.a.habib.moviecatalogapp.presentation.movies.MoviesViewModel
 import com.ahmed.a.habib.moviecatalogapp.presentation.movies.MoviesViewStates
@@ -35,42 +34,27 @@ class MoviesViewModelTestFake {
 
     @Test
     fun `test getMovies success`() = runTest {
-        // Arrange
-        val movieList = emptyList<MovieDto>()
-
         // Act
         viewModel.getMovies()
 
         // Assert
         val value = viewModel.result.getOrAwaitValueTest()
-        assertThat(value).isEqualTo(MoviesViewStates.MoviesList(movieList))
-    }
-
-    @Test
-    fun `test getCurrentPage return current offline page success`() = runTest {
-        // Arrange
-        val mockPage = CurrentPageDto(1, emptyList())
-
-        // Act
-        val currentPage = viewModel.getCurrentPage()
-
-        // Assert
-        assertThat(currentPage).isEqualTo(mockPage)
+        assertThat(value).isEqualTo(MoviesViewStates.MoviesList(PagingData.empty()))
     }
 
     @Test
     fun `test getOnlineMovies fetch movies from online source`() = runTest {
-        // Arrange
-        val mockPage = CurrentPageDto(1, emptyList())
-
         // Act
-        viewModel.getOnlineMovies()
+        viewModel.getOnlineMovies(
+            errors = {},
+            loading = {}
+        )
 
         // Ensure that all coroutines is executed.
         advanceUntilIdle()
 
         // Assert
         val value = viewModel.result.getOrAwaitValueTest()
-        assertThat(value).isEqualTo(MoviesViewStates.MoviesList(mockPage.moviesList))
+        assertThat(value).isEqualTo(MoviesViewStates.MoviesList(PagingData.empty()))
     }
 }

@@ -45,7 +45,7 @@ class MoviesViewModel @Inject constructor(private val moviesRepo: MoviesRepo) : 
         }
     }
 
-    private fun getMovies() = viewModelScope.launch(coroutineExceptionHandler) {
+    fun getMovies() = viewModelScope.launch(coroutineExceptionHandler) {
         val hasStoredPages = offlineMoviesIsNotEmpty()
 
         if (hasStoredPages) {
@@ -64,7 +64,7 @@ class MoviesViewModel @Inject constructor(private val moviesRepo: MoviesRepo) : 
         }
     }
 
-    private suspend fun getOnlineMovies(
+    suspend fun getOnlineMovies(
         errors: (ErrorTypes) -> Unit,
         loading: (Boolean) -> Unit
     ) = withContext(Dispatchers.IO) {

@@ -2,10 +2,10 @@ package com.ahmed.a.habib.moviecatalogapp.roomdb
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.test.filters.SmallTest
-import com.ahmed.a.habib.moviecatalogapp.data.local.MoviesRoomDB
 import com.ahmed.a.habib.moviecatalogapp.data.local.dao.MoviesDao
-import com.ahmed.a.habib.moviecatalogapp.data.local.entities.PageEntity
+import com.ahmed.a.habib.moviecatalogapp.data.local.db.MoviesRoomDB
 import com.ahmed.a.habib.moviecatalogapp.data.local.entities.MovieEntity
+import com.ahmed.a.habib.moviecatalogapp.data.local.entities.PageEntity
 import com.google.common.truth.Truth.assertThat
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest

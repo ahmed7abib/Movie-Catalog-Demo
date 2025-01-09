@@ -2,7 +2,7 @@ package com.ahmed.a.habib.moviecatalogapp.di
 
 import android.content.Context
 import androidx.room.Room
-import com.ahmed.a.habib.moviecatalogapp.data.local.MoviesRoomDB
+import com.ahmed.a.habib.moviecatalogapp.data.local.db.MoviesRoomDB
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

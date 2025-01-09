@@ -19,7 +19,7 @@ import kotlinx.coroutines.launch
 class MoviesFragment : BaseFragment<FragmentMoviesBinding>(FragmentMoviesBinding::inflate) {
 
     override val viewModel: MoviesViewModel by viewModels()
-    private val adapter: MoviesPagingAdapter by lazy { MoviesPagingAdapter() }
+    val adapter: MoviesPagingAdapter by lazy { MoviesPagingAdapter() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

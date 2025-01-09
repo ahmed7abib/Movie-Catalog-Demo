@@ -16,7 +16,7 @@ inline fun <reified T : Fragment> launchFragmentInHiltContainer(
     fragmentArgs: Bundle? = null,
     @StyleRes themeResId: Int = R.style.Theme_MovieCatalogApp,
     factory: FragmentFactory,
-    crossinline action: T.() -> Unit = {}
+    crossinline  action: T.() -> Unit = {}
 ) {
 
     val startActivityIntent = Intent.makeMainActivity(

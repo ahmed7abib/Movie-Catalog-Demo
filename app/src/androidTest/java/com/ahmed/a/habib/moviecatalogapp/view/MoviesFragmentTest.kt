@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
+import androidx.paging.PagingData
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.contrib.RecyclerViewActions
@@ -16,9 +17,11 @@ import com.ahmed.a.habib.moviecatalogapp.databinding.ItemListMoviesBinding
 import com.ahmed.a.habib.moviecatalogapp.domain.dto.MovieDto
 import com.ahmed.a.habib.moviecatalogapp.launchFragmentInHiltContainer
 import com.ahmed.a.habib.moviecatalogapp.presentation.movies.MoviesFragment
+import com.ahmed.a.habib.moviecatalogapp.utils.BasePagingAdapter
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Rule
@@ -55,34 +58,39 @@ class MoviesFragmentTest {
         val navController = Mockito.mock(NavController::class.java)
         val argumentCaptor = ArgumentCaptor.forClass(Bundle::class.java)
 
-        val fakeMovies = listOf(
-            MovieDto(
-                1,
-                1,
-                "title",
-                "posterPath",
-                "overview",
-                122,
-                4.5,
-                "releaseDate"
+        val fakeMovies = PagingData.from(
+            listOf(
+                MovieDto(
+                    1,
+                    1,
+                    "title",
+                    "posterPath",
+                    "overview",
+                    122,
+                    4.5,
+                    "releaseDate"
+                )
             )
         )
 
+        // Launch the fragment and set the NavController inside the coroutine
         launchFragmentInHiltContainer<MoviesFragment>(factory = fragmentFactory) {
             Navigation.setViewNavController(requireView(), navController)
-            adapter.submitList(fakeMovies)
+            launch {
+                adapter.submitData(fakeMovies)
+            }
         }
 
-        // Act
+        // Act - perform click on the first item in the RecyclerView
         onView(withId(R.id.moviesRV))
             .perform(
-                RecyclerViewActions.actionOnItemAtPosition<BaseRVAdapter.BaseViewHolder<ItemListMoviesBinding>>(
+                RecyclerViewActions.actionOnItemAtPosition<BasePagingAdapter.BaseViewHolder<ItemListMoviesBinding>>(
                     0,
                     click()
                 )
             )
 
-        // Assert
+        // Assert - verify navigation happens with the correct argument
         Mockito.verify(navController).navigate(
             Mockito.eq(R.id.action_moviesFragment_to_movieDetailsFragment),
             argumentCaptor.capture()
