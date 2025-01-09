@@ -80,13 +80,6 @@ class OnlineMoviePagingSource(
             )
         }
 
-        val newOfflineMoviesList = arrayListOf<MovieEntity>()
-        val allOfflineMovies = moviesDao.getPage(page)?.moviesList.orEmpty()
-        moviesDao.deleteAllPages()
-
-        newOfflineMoviesList.addAll(allOfflineMovies)
-        newOfflineMoviesList.addAll(currentMovieList)
-
-        moviesDao.saveCurrentPage(PageEntity(pageNumber = page, moviesList = newOfflineMoviesList))
+        moviesDao.saveCurrentPage(PageEntity(pageNumber = page, moviesList = currentMovieList))
     }
 }

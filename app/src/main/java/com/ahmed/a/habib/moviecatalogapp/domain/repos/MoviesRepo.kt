@@ -12,9 +12,9 @@ interface MoviesRepo {
         loading: (Boolean) -> Unit,
     ): Flow<PagingData<MovieDto>>
 
-    suspend fun getOfflineMovies(
-        errors: (ErrorTypes) -> Unit,
-    ): Flow<PagingData<MovieDto>>
+    suspend fun getOfflineMovies(): Flow<PagingData<MovieDto>>
 
     suspend fun deleteAllMovies()
+
+    suspend fun hasStoredPages(): Boolean
 }

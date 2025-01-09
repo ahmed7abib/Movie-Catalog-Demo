@@ -12,25 +12,26 @@ import com.ahmed.a.habib.moviecatalogapp.domain.dto.MovieDto
 import com.ahmed.a.habib.moviecatalogapp.utils.Keys
 import com.ahmed.a.habib.moviecatalogapp.utils.ui.BaseFragment
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MoviesFragment : BaseFragment<FragmentMoviesBinding>(FragmentMoviesBinding::inflate) {
 
     override val viewModel: MoviesViewModel by viewModels()
-    val adapter: MoviesPagingAdapter by lazy { MoviesPagingAdapter() }
+    private val adapter: MoviesPagingAdapter by lazy { MoviesPagingAdapter() }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        viewModel.sendIntend(MoviesIntents.GetMovies)
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        init()
         render()
         setupRV()
         setupSwipeRefresh()
-    }
-
-    private fun init() {
-        viewModel.sendIntend(MoviesIntents.GetMovies)
     }
 
     private fun setupRV() {
@@ -48,6 +49,7 @@ class MoviesFragment : BaseFragment<FragmentMoviesBinding>(FragmentMoviesBinding
     private fun setupSwipeRefresh() {
         binding.swipeRefreshLayout.setOnRefreshListener {
             viewModel.sendIntend(MoviesIntents.RefreshMovies)
+            adapter.refresh()
             binding.swipeRefreshLayout.isRefreshing = false
         }
     }
@@ -60,14 +62,15 @@ class MoviesFragment : BaseFragment<FragmentMoviesBinding>(FragmentMoviesBinding
         }
     }
 
-    private fun handleMoviesList(movies: PagingData<MovieDto>?) {
-        if (movies == null) {
-            showEmptyView()
-        } else {
-            hideEmptyView()
-            lifecycleScope.launch { adapter.submitData(movies) }
+    private fun handleMoviesList(movies: PagingData<MovieDto>?) =
+        lifecycleScope.launch(Dispatchers.Main) {
+            if (movies == null) {
+                showEmptyView()
+            } else {
+                hideEmptyView()
+                adapter.submitData(movies)
+            }
         }
-    }
 
     private fun showEmptyView() {
         binding.moviesRV.visibility = View.GONE

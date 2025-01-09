@@ -1,14 +1,17 @@
 package com.ahmed.a.habib.moviecatalogapp.presentation.movies
 
-
 import androidx.lifecycle.viewModelScope
 import com.ahmed.a.habib.moviecatalogapp.domain.repos.MoviesRepo
 import com.ahmed.a.habib.moviecatalogapp.utils.SingleMutableLiveData
+import com.ahmed.a.habib.moviecatalogapp.utils.network.ErrorMessage
+import com.ahmed.a.habib.moviecatalogapp.utils.network.ErrorTypes
 import com.ahmed.a.habib.moviecatalogapp.utils.ui.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 
@@ -20,52 +23,62 @@ class MoviesViewModel @Inject constructor(private val moviesRepo: MoviesRepo) : 
     private val _result: SingleMutableLiveData<MoviesViewStates> = SingleMutableLiveData()
     val result: SingleMutableLiveData<MoviesViewStates> get() = _result
 
+    private val coroutineExceptionHandler = CoroutineExceptionHandler { _, throwable ->
+        handleError(ErrorTypes.GeneralError(ErrorMessage.DynamicString(throwable.message.orEmpty())))
+    }
+
     fun sendIntend(intent: MoviesIntents) = viewModelScope.launch {
         sendIntend.emit(intent)
     }
 
     init {
         viewModelScope.launch {
-            sendIntend.collectLatest {
+            sendIntend.collect {
                 when (it) {
                     MoviesIntents.GetMovies -> getMovies()
-                    MoviesIntents.RefreshMovies -> refreshMovies()
+                    MoviesIntents.RefreshMovies -> {
+                        deleteAllMovies()
+                        getMovies()
+                    }
                 }
             }
         }
     }
 
-    private suspend fun getOnlineMovies() {
+    private fun getMovies() = viewModelScope.launch(coroutineExceptionHandler) {
+        val hasStoredPages = offlineMoviesIsNotEmpty()
+
+        if (hasStoredPages) {
+            emmitOfflineMovies()
+        } else {
+            emmitOnlineMovies()
+        }
+    }
+
+    private suspend fun emmitOnlineMovies() {
+        getOnlineMovies().collect { _result.value = MoviesViewStates.MoviesList(it) }
+    }
+
+    private suspend fun getOnlineMovies() = withContext(Dispatchers.IO) {
         moviesRepo.getOnlineMovies(
             errors = { error -> handleError(error) },
             loading = { isLoading -> handleLoading(isLoading) }
-        ).collect {
-            _result.postValue(MoviesViewStates.MoviesList(it))
-        }
+        )
     }
 
-    private suspend fun getOfflineMovies() {
-        moviesRepo.getOfflineMovies { error ->
-            handleError(error)
-        }.collect {
-            _result.postValue(MoviesViewStates.MoviesList(it))
-        }
+    private suspend fun emmitOfflineMovies() {
+        getOfflineMovies().collect { _result.value = MoviesViewStates.MoviesList(it) }
     }
 
-    suspend fun getMovies() {
-        if (offlineMoviesIsNotEmpty()) {
-            getOfflineMovies()
-        } else {
-            getOnlineMovies()
-        }
+    private suspend fun getOfflineMovies() = withContext(Dispatchers.IO) {
+        moviesRepo.getOfflineMovies()
     }
 
-    private fun offlineMoviesIsNotEmpty(): Boolean {
-        return true
+    private suspend fun offlineMoviesIsNotEmpty() = withContext(Dispatchers.IO) {
+        moviesRepo.hasStoredPages()
     }
 
-    private fun refreshMovies() = viewModelScope.launch {
+    private suspend fun deleteAllMovies() = withContext(Dispatchers.IO) {
         moviesRepo.deleteAllMovies()
-        getOnlineMovies()
     }
 }

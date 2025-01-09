@@ -1,5 +1,6 @@
 package com.ahmed.a.habib.moviecatalogapp.data.local.dao
 
+import androidx.paging.PagingSource
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
@@ -12,9 +13,12 @@ interface MoviesDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun saveCurrentPage(pageEntity: PageEntity)
 
-    @Query("SELECT * FROM pages WHERE pageNumber = :page")
-    suspend fun getPage(page: Int): PageEntity?
+    @Query("SELECT * FROM pages ORDER BY pageNumber ASC")
+    fun getPage(): PagingSource<Int, PageEntity>
 
     @Query("DELETE FROM pages")
     suspend fun deleteAllPages()
+
+    @Query("SELECT COUNT(*) FROM pages")
+    suspend fun getPageCount(): Int
 }
