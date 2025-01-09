@@ -53,6 +53,7 @@ abstract class BaseFragment<BB : ViewBinding>(
 
     private fun addProgressBar(viewGroup: ViewGroup?) {
         progressBar = ProgressBar(requireContext())
+
         progressBar.layoutParams = FrameLayout.LayoutParams(
             ViewGroup.LayoutParams.WRAP_CONTENT,
             ViewGroup.LayoutParams.WRAP_CONTENT

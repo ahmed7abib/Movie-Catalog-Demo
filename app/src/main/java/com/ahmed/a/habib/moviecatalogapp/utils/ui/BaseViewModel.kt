@@ -10,7 +10,7 @@ open class BaseViewModel : ViewModel() {
     private val _errorMessage: SingleMutableLiveData<ErrorMessage> = SingleMutableLiveData()
     val errorMessage get() = _errorMessage
 
-    protected val _isLoading: SingleMutableLiveData<Boolean> = SingleMutableLiveData()
+    private val _isLoading: SingleMutableLiveData<Boolean> = SingleMutableLiveData()
     val isLoading get() = _isLoading
 
     private val _isAuthError: SingleMutableLiveData<Boolean> = SingleMutableLiveData()

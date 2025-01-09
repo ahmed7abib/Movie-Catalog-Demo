@@ -56,14 +56,19 @@ class MoviesViewModel @Inject constructor(private val moviesRepo: MoviesRepo) : 
     }
 
     private suspend fun emmitOnlineMovies() {
-        getOnlineMovies().collect { _result.value = MoviesViewStates.MoviesList(it) }
-    }
-
-    private suspend fun getOnlineMovies() = withContext(Dispatchers.IO) {
-        moviesRepo.getOnlineMovies(
+        getOnlineMovies(
             errors = { error -> handleError(error) },
             loading = { isLoading -> handleLoading(isLoading) }
-        )
+        ).collect {
+            _result.value = MoviesViewStates.MoviesList(it)
+        }
+    }
+
+    private suspend fun getOnlineMovies(
+        errors: (ErrorTypes) -> Unit,
+        loading: (Boolean) -> Unit
+    ) = withContext(Dispatchers.IO) {
+        moviesRepo.getOnlineMovies(errors = { errors(it) }, loading = { loading(it) })
     }
 
     private suspend fun emmitOfflineMovies() {
