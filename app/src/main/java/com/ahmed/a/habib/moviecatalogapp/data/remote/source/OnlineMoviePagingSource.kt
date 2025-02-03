@@ -31,27 +31,15 @@ class OnlineMoviePagingSource(
             loading(false)
             val response = apiService.getMovies(page = page)
 
-            if (response.isSuccessful) {
-                val moviesList = response.body()?.moviesList?.map { it.toMovieDto() }.orEmpty()
+            val moviesList = response.getOrNull()?.moviesList?.map { it.toMovieDto() }.orEmpty()
 
-                appendToOfflineMovies(page, moviesList)
+            appendToOfflineMovies(page, moviesList)
 
-                LoadResult.Page(
-                    data = moviesList,
-                    prevKey = if (page == 1) null else page - 1,
-                    nextKey = if (moviesList.isEmpty()) null else page + 1
-                )
-            } else {
-                error(
-                    ErrorTypes.GeneralError(
-                        ErrorMessage.DynamicString(
-                            response.message()
-                        )
-                    )
-                )
-
-                LoadResult.Error(Exception(response.message()))
-            }
+            LoadResult.Page(
+                data = moviesList,
+                prevKey = if (page == 1) null else page - 1,
+                nextKey = if (moviesList.isEmpty()) null else page + 1
+            )
         } catch (e: Exception) {
             loading(false)
 

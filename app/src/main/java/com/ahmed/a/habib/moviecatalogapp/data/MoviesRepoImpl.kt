@@ -9,7 +9,6 @@ import com.ahmed.a.habib.moviecatalogapp.data.remote.api.MoviesApi
 import com.ahmed.a.habib.moviecatalogapp.data.remote.source.OnlineMoviePagingSource
 import com.ahmed.a.habib.moviecatalogapp.domain.dto.MovieDto
 import com.ahmed.a.habib.moviecatalogapp.domain.repos.MoviesRepo
-import com.ahmed.a.habib.moviecatalogapp.utils.network.BaseRemoteDataSource
 import com.ahmed.a.habib.moviecatalogapp.utils.network.ErrorTypes
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -18,7 +17,7 @@ import kotlinx.coroutines.flow.map
 class MoviesRepoImpl(
     private val moviesApi: MoviesApi,
     private val moviesDao: MoviesDao,
-) : MoviesRepo, BaseRemoteDataSource() {
+) : MoviesRepo {
 
     override suspend fun getOnlineMovies(
         errors: (ErrorTypes) -> Unit,

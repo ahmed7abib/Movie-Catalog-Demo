@@ -3,16 +3,24 @@ package com.ahmed.a.habib.moviecatalogapp.data.remote.api
 import com.ahmed.a.habib.moviecatalogapp.data.remote.api.EndPoints.API_KEY
 import com.ahmed.a.habib.moviecatalogapp.data.remote.api.EndPoints.MOVIES
 import com.ahmed.a.habib.moviecatalogapp.data.remote.models.MoviesResponse
-import retrofit2.Response
-import retrofit2.http.GET
-import retrofit2.http.Query
+import io.ktor.client.HttpClient
+import io.ktor.client.call.body
+import io.ktor.client.request.get
+import io.ktor.client.request.parameter
 
 
-interface MoviesApi {
+class MoviesApi(private val httpClient: HttpClient) {
 
-    @GET(MOVIES)
-    suspend fun getMovies(
-        @Query("api_key") apiKey: String = API_KEY,
-        @Query("page") page: Int,
-    ): Response<MoviesResponse>
+    suspend fun getMovies(page: Int): Result<MoviesResponse> {
+        return try {
+            Result.success(
+                httpClient.get(MOVIES) {
+                    parameter("api_key", API_KEY)
+                    parameter("page", page)
+                }.body()
+            )
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
 }

@@ -1,22 +1,20 @@
 package com.ahmed.a.habib.moviecatalogapp.di
 
-import android.content.Context
+import android.util.Log
 import com.ahmed.a.habib.moviecatalogapp.data.remote.api.EndPoints
-import com.ahmed.a.habib.moviecatalogapp.data.remote.api.EndPoints.BASE_URL
 import com.ahmed.a.habib.moviecatalogapp.data.remote.api.MoviesApi
-import com.ahmed.a.habib.moviecatalogapp.utils.network.InternetInterceptor
-import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import okhttp3.OkHttpClient
-import okhttp3.Request
-import okhttp3.logging.HttpLoggingInterceptor
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
-import java.util.concurrent.TimeUnit
+import io.ktor.client.HttpClient
+import io.ktor.client.engine.cio.CIO
+import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.client.plugins.defaultRequest
+import io.ktor.client.plugins.logging.LogLevel
+import io.ktor.client.plugins.logging.Logger
+import io.ktor.client.plugins.logging.Logging
+import io.ktor.serialization.gson.gson
 import javax.inject.Singleton
 
 
@@ -26,46 +24,24 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideRetrofitInstance(client: OkHttpClient): MoviesApi {
-        return Retrofit.Builder()
-            .baseUrl(BASE_URL)
-            .addCallAdapterFactory(CoroutineCallAdapterFactory())
-            .addConverterFactory(GsonConverterFactory.create())
-            .client(client)
-            .build()
-            .create(MoviesApi::class.java)
-    }
-
-    @Provides
-    @Singleton
-    fun provideHttpClient(
-        interceptor: HttpLoggingInterceptor,
-        internetInterceptor: InternetInterceptor
-    ): OkHttpClient {
-        return OkHttpClient.Builder().apply {
-            connectTimeout(15, TimeUnit.SECONDS)
-            readTimeout(15, TimeUnit.SECONDS)
-            addInterceptor(interceptor)
-            addInterceptor(internetInterceptor)
-            addInterceptor { chain ->
-                val request: Request =
-                    chain.request()
-                        .newBuilder().addHeader("Authorization", EndPoints.BEAR_TOKEN)
-                        .build()
-                chain.proceed(request)
+    fun provideHttpClient(): HttpClient {
+        return HttpClient(CIO) {
+            install(ContentNegotiation) { gson() }
+            defaultRequest { url(EndPoints.BASE_URL) }
+            install(Logging) {
+                level = LogLevel.ALL
+                logger = object : Logger {
+                    override fun log(message: String) {
+                        Log.i("KTOR", message)
+                    }
+                }
             }
-        }.build()
+        }
     }
 
     @Provides
     @Singleton
-    fun provideLoggingInterceptor(): HttpLoggingInterceptor {
-        return HttpLoggingInterceptor().apply { level = HttpLoggingInterceptor.Level.BODY }
-    }
-
-    @Provides
-    @Singleton
-    fun provideInternetInterceptor(@ApplicationContext context: Context): InternetInterceptor {
-        return InternetInterceptor(context)
+    fun provideApiService(client: HttpClient): MoviesApi {
+        return MoviesApi(client)
     }
 }
