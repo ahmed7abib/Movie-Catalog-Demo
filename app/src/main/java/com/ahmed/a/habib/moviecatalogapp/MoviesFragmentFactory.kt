@@ -4,9 +4,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentFactory
 import com.ahmed.a.habib.moviecatalogapp.presentation.movieDetails.MovieDetailsFragment
 import com.ahmed.a.habib.moviecatalogapp.presentation.movies.MoviesFragment
-import javax.inject.Inject
 
-class MoviesFragmentFactory @Inject constructor() : FragmentFactory() {
+class MoviesFragmentFactory : FragmentFactory() {
 
     override fun instantiate(classLoader: ClassLoader, className: String): Fragment {
         return when (className) {

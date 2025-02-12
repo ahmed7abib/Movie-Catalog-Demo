@@ -10,9 +10,8 @@ import com.ahmed.a.habib.moviecatalogapp.utils.loadImage
 import com.ahmed.a.habib.moviecatalogapp.utils.serializable
 import com.ahmed.a.habib.moviecatalogapp.utils.ui.BaseFragment
 import com.ahmed.a.habib.moviecatalogapp.utils.ui.BaseViewModel
-import dagger.hilt.android.AndroidEntryPoint
 
-@AndroidEntryPoint
+
 class MovieDetailsFragment :
     BaseFragment<FragmentMovieDetailsBinding>(FragmentMovieDetailsBinding::inflate) {
 

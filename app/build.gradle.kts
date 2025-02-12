@@ -1,7 +1,6 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
-    alias(libs.plugins.hilt)
     alias(libs.plugins.ksp)
 }
 
@@ -80,7 +79,6 @@ dependencies {
     implementation(libs.multidex)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
-    implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
 
     // Testing
@@ -103,10 +101,6 @@ dependencies {
     androidTestImplementation(libs.kotlinx.coroutines.test)
     androidTestImplementation(libs.fragment.testing)
 
-    // Hilt
-    implementation(libs.hilt.android)
-    ksp(libs.hilt.compiler)
-
     // Room
     implementation(libs.room.runtime)
     implementation(libs.room.ktx)
@@ -121,10 +115,6 @@ dependencies {
     implementation(libs.navigation.fragment)
     implementation(libs.navigation.ui)
 
-    // Glide
-    implementation(libs.glide)
-    ksp(libs.glide.compiler)
-
     // Paging 3
     implementation(libs.paging.runtime)
 
@@ -132,10 +122,17 @@ dependencies {
     implementation(libs.swiperefreshlayout)
 
     // Ktor
+    implementation(libs.gson)
+    implementation(libs.ktor.serialization.gson)
     implementation(libs.ktor.client.core)
     implementation(libs.ktor.client.cio)
     implementation(libs.ktor.client.logging)
     implementation(libs.ktor.client.content.negotiation)
-    implementation(libs.ktor.serialization.gson)
-    implementation(libs.gson)
+
+    // Koin
+    implementation(libs.koin.core)
+    implementation(libs.koin.android)
+
+    // Coil
+    implementation(libs.coil)
 }

@@ -2,7 +2,6 @@ package com.ahmed.a.habib.moviecatalogapp.presentation.movies
 
 import android.os.Bundle
 import android.view.View
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.paging.PagingData
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -11,14 +10,14 @@ import com.ahmed.a.habib.moviecatalogapp.databinding.FragmentMoviesBinding
 import com.ahmed.a.habib.moviecatalogapp.domain.dto.MovieDto
 import com.ahmed.a.habib.moviecatalogapp.utils.Keys
 import com.ahmed.a.habib.moviecatalogapp.utils.ui.BaseFragment
-import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
-@AndroidEntryPoint
+
 class MoviesFragment : BaseFragment<FragmentMoviesBinding>(FragmentMoviesBinding::inflate) {
 
-    override val viewModel: MoviesViewModel by viewModels()
+    override val viewModel: MoviesViewModel by viewModel<MoviesViewModel>()
     val adapter: MoviesPagingAdapter by lazy { MoviesPagingAdapter() }
 
     override fun onCreate(savedInstanceState: Bundle?) {

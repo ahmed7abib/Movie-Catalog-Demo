@@ -6,11 +6,10 @@ import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
 import android.widget.Toast
+import coil3.load
 import com.ahmed.a.habib.moviecatalogapp.data.remote.api.EndPoints
-import com.bumptech.glide.Glide
 import com.google.android.material.snackbar.Snackbar
 import java.io.Serializable
-
 
 fun Context.showSnackBar(view: View, msg: String) {
     Snackbar.make(this, view, msg, Snackbar.LENGTH_LONG).show()
@@ -22,9 +21,7 @@ fun Context.showToast(msg: String) {
 
 fun ImageView.loadImage(path: String) {
     val url = "${EndPoints.IMAGES_BASE_URL}${path}"
-    Glide.with(this.context)
-        .load(url)
-        .into(this)
+    this.load(url)
 }
 
 inline fun <reified T : Serializable?> Bundle.serializable(key: String): T? = when {

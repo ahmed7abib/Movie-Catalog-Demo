@@ -6,17 +6,13 @@ import com.ahmed.a.habib.moviecatalogapp.utils.SingleMutableLiveData
 import com.ahmed.a.habib.moviecatalogapp.utils.network.ErrorMessage
 import com.ahmed.a.habib.moviecatalogapp.utils.network.ErrorTypes
 import com.ahmed.a.habib.moviecatalogapp.utils.ui.BaseViewModel
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import javax.inject.Inject
 
-
-@HiltViewModel
-class MoviesViewModel @Inject constructor(private val moviesRepo: MoviesRepo) : BaseViewModel() {
+class MoviesViewModel(private val moviesRepo: MoviesRepo) : BaseViewModel() {
 
     private val sendIntend: MutableSharedFlow<MoviesIntents> = MutableSharedFlow()
 
@@ -66,7 +62,7 @@ class MoviesViewModel @Inject constructor(private val moviesRepo: MoviesRepo) : 
 
     suspend fun getOnlineMovies(
         errors: (ErrorTypes) -> Unit,
-        loading: (Boolean) -> Unit
+        loading: (Boolean) -> Unit,
     ) = withContext(Dispatchers.IO) {
         moviesRepo.getOnlineMovies(errors = { errors(it) }, loading = { loading(it) })
     }

@@ -10,6 +10,8 @@ import com.ahmed.a.habib.moviecatalogapp.data.remote.api.MoviesApi
 import com.ahmed.a.habib.moviecatalogapp.domain.dto.MovieDto
 import com.ahmed.a.habib.moviecatalogapp.utils.network.ErrorMessage
 import com.ahmed.a.habib.moviecatalogapp.utils.network.ErrorTypes
+import com.ahmed.a.habib.moviecatalogapp.utils.network.Resource
+import kotlinx.coroutines.flow.map
 import kotlin.collections.orEmpty
 
 
@@ -29,11 +31,20 @@ class OnlineMoviePagingSource(
 
         return try {
             loading(false)
+
+            var moviesList = emptyList<MovieDto>()
             val response = apiService.getMovies(page = page)
 
-            val moviesList = response.getOrNull()?.moviesList?.map { it.toMovieDto() }.orEmpty()
+            response.map {
+                when (it) {
+                    is Resource.Error -> error(it.errorTypes.errorMessage)
 
-            appendToOfflineMovies(page, moviesList)
+                    is Resource.Success -> {
+                        moviesList = it.data?.moviesList?.map { it.toMovieDto() }.orEmpty()
+                        appendToOfflineMovies(page, moviesList)
+                    }
+                }
+            }
 
             LoadResult.Page(
                 data = moviesList,

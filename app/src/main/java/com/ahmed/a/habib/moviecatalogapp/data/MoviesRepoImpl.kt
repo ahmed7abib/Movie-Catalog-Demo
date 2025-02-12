@@ -21,7 +21,7 @@ class MoviesRepoImpl(
 
     override suspend fun getOnlineMovies(
         errors: (ErrorTypes) -> Unit,
-        loading: (Boolean) -> Unit
+        loading: (Boolean) -> Unit,
     ) = Pager(
         pagingSourceFactory = {
             OnlineMoviePagingSource(
@@ -39,9 +39,7 @@ class MoviesRepoImpl(
             pagingSourceFactory = { moviesDao.getPage() },
             config = PagingConfig(pageSize = 10, enablePlaceholders = false)
         ).flow.map { pagingData ->
-            pagingData.flatMap { pageEntity ->
-                pageEntity.toDto().moviesList
-            }
+            pagingData.flatMap { pageEntity -> pageEntity.toDto().moviesList }
         }
     }
 
