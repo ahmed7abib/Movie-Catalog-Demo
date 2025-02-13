@@ -5,18 +5,13 @@ import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
-import android.widget.Toast
-import coil3.load
+import coil.load
 import com.ahmed.a.habib.moviecatalogapp.data.remote.api.EndPoints
 import com.google.android.material.snackbar.Snackbar
 import java.io.Serializable
 
 fun Context.showSnackBar(view: View, msg: String) {
     Snackbar.make(this, view, msg, Snackbar.LENGTH_LONG).show()
-}
-
-fun Context.showToast(msg: String) {
-    Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
 }
 
 fun ImageView.loadImage(path: String) {

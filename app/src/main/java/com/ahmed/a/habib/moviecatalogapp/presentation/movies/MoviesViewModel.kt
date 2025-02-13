@@ -9,6 +9,7 @@ import com.ahmed.a.habib.moviecatalogapp.utils.ui.BaseViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -55,7 +56,7 @@ class MoviesViewModel(private val moviesRepo: MoviesRepo) : BaseViewModel() {
         getOnlineMovies(
             errors = { error -> handleError(error) },
             loading = { isLoading -> handleLoading(isLoading) }
-        ).collect {
+        ).collectLatest {
             _result.value = MoviesViewStates.MoviesList(it)
         }
     }

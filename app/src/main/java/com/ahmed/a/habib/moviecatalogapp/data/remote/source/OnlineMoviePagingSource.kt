@@ -4,14 +4,14 @@ package com.ahmed.a.habib.moviecatalogapp.data.remote.source
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.ahmed.a.habib.moviecatalogapp.data.local.dao.MoviesDao
-import com.ahmed.a.habib.moviecatalogapp.data.local.entities.PageEntity
 import com.ahmed.a.habib.moviecatalogapp.data.local.entities.MovieEntity
+import com.ahmed.a.habib.moviecatalogapp.data.local.entities.PageEntity
 import com.ahmed.a.habib.moviecatalogapp.data.remote.api.MoviesApi
 import com.ahmed.a.habib.moviecatalogapp.domain.dto.MovieDto
 import com.ahmed.a.habib.moviecatalogapp.utils.network.ErrorMessage
 import com.ahmed.a.habib.moviecatalogapp.utils.network.ErrorTypes
 import com.ahmed.a.habib.moviecatalogapp.utils.network.Resource
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.collectLatest
 import kotlin.collections.orEmpty
 
 
@@ -30,12 +30,11 @@ class OnlineMoviePagingSource(
         loading(true)
 
         return try {
-            loading(false)
 
             var moviesList = emptyList<MovieDto>()
             val response = apiService.getMovies(page = page)
 
-            response.map {
+            response.collectLatest {
                 when (it) {
                     is Resource.Error -> error(it.errorTypes.errorMessage)
 
@@ -45,6 +44,8 @@ class OnlineMoviePagingSource(
                     }
                 }
             }
+
+            loading(false)
 
             LoadResult.Page(
                 data = moviesList,

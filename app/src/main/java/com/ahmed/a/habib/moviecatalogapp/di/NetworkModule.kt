@@ -21,17 +21,9 @@ val networkModule = module {
 private fun provideHttpClient(): HttpClient {
     return HttpClient(CIO) {
         defaultRequest { url(EndPoints.BASE_URL) }
-
-        install(ContentNegotiation) {
-            gson {
-                disableHtmlEscaping()
-                setPrettyPrinting()
-                setLenient()
-            }
-        }
-
+        install(ContentNegotiation) { gson() }
         install(Logging) {
-            level = LogLevel.ALL
+            level = LogLevel.BODY
             logger = object : Logger {
                 override fun log(message: String) {
                     println("KTOR $message")
