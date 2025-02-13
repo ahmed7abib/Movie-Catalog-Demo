@@ -22,17 +22,20 @@ class MoviesRepoImpl(
     override suspend fun getOnlineMovies(
         errors: (ErrorTypes) -> Unit,
         loading: (Boolean) -> Unit,
-    ) = Pager(
-        pagingSourceFactory = {
-            OnlineMoviePagingSource(
-                moviesDao,
-                moviesApi,
-                error = { error -> errors(error) },
-                loading = { loading -> loading(loading) }
-            )
-        },
-        config = PagingConfig(pageSize = 10, enablePlaceholders = false)
-    ).flow
+    ): Flow<PagingData<MovieDto>> {
+        return Pager(
+            pagingSourceFactory = {
+                OnlineMoviePagingSource(
+                    moviesDao,
+                    moviesApi,
+                    error = { error -> errors(error) },
+                    loading = { loading -> loading(loading) }
+                )
+            },
+            config = PagingConfig(pageSize = 10, enablePlaceholders = false)
+        ).flow
+    }
+
 
     override suspend fun getOfflineMovies(): Flow<PagingData<MovieDto>> {
         return Pager(
