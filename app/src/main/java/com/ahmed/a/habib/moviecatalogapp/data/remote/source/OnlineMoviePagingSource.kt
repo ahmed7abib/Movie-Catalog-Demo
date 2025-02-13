@@ -40,7 +40,6 @@ class OnlineMoviePagingSource(
                     is Resource.Error -> error(it.errorTypes.errorMessage)
 
                     is Resource.Success -> {
-                        println("SUCCESS")
                         moviesList = it.data?.moviesList?.map { it.toMovieDto() }.orEmpty()
                         appendToOfflineMovies(page, moviesList)
                     }
